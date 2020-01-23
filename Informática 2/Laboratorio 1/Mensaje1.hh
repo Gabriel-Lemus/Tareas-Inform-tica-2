@@ -1,0 +1,1 @@
+#define MENSAJE1 "Informatica II"
