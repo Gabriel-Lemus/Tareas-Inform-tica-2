@@ -13,7 +13,7 @@ int main()
     */
     std::printf(MENSAJE);
     std::cout << std::endl;
-    std::printf("%s, %i", MENSAJE1, VALOR3);
+    std::printf("%s, %i\n", MENSAJE1, VALOR3);
 
     /*
     Retornamos el valor 0 para indicar que
