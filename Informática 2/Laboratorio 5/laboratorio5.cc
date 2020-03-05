@@ -20,26 +20,26 @@ int *copiar(int *valores, int cantidad)
 //Ejercicio #2 ====================================================================================================
 bool esPrimo(const int num)
 {
-	bool esPrimo = true;
+    bool esPrimo = true;
 
-	if (num <= 1)
-	{
-		return false;
-	}
+    if (num <= 1)
+    {
+        return false;
+    }
 
-	else
-	{
-		for (int i = 2; i <= num / 2; i++)
-		{
-			if (num % i == 0)
-			{
-				esPrimo = false;
-				break;
-			}
-		}
+    else
+    {
+        for (int i = 2; i <= num / 2; i++)
+        {
+            if (num % i == 0)
+            {
+                esPrimo = false;
+                break;
+            }
+        }
 
-		return esPrimo;
-	}
+        return esPrimo;
+    }
 }
 
 int primosMenores(int num)
