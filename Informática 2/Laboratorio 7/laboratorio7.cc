@@ -58,6 +58,50 @@ int *vector_A_Arreglo(Vector vector)
     return posicion;
 }
 
+// Función que recibe como parámetros el ancho y largo de un mapa, así como la referencia a un vector.
+// Si las componentes del vector están fuera del mapa, la función las reduce hasta que estén dentro del
+// mismo y retorna un vector con la nueva posición válida.
+void trasladarPunto(const int anchoDelMapa, const int largoDelMapa, Vector &posicion)
+{
+    while (posicion.x >= anchoDelMapa || posicion.y >= largoDelMapa)
+    {
+        if (posicion.x >= anchoDelMapa)
+        {
+            while (posicion.x >= anchoDelMapa)
+            {
+                posicion.x -= anchoDelMapa;
+            }
+        }
+
+        else
+        {
+            while (posicion.y >= largoDelMapa)
+            {
+                posicion.y -= largoDelMapa;
+            }
+        }
+    }
+}
+
+// Función que recibe como parámetros el ancho y largo de un mapa, así como dos vectores: uno que representa la
+// posición inicial de un vehículo y otro que representa su velocidad.
+// La función determina la cantidad de posibles coordenadas hacia las cuales podría viajar el vehículo si se
+// mantiene con la velocidad constante, hasta retornar al punto inicial.
+int determinarPosiblesPosiciones(const int anchoDelMapa, const int largoDelMapa, const Vector puntoInicial, const Vector velocidad)
+{
+    int contador = 1;
+    Vector posiblePosicion = sumarVectores(puntoInicial, velocidad);
+
+    while (!igualdadEntreVectores(posiblePosicion, puntoInicial))
+    {
+        posiblePosicion = sumarVectores(posiblePosicion, velocidad);
+        trasladarPunto(anchoDelMapa, largoDelMapa, posiblePosicion);
+        contador++;
+    }
+
+    return contador;
+}
+
 // Ejercicio #1 ====================================================================================================
 class Vehiculo
 {
@@ -113,6 +157,11 @@ public:
 
         for (int i = 0; i < posicionesPermitidas; i++)
         {
+            mapa.posiciones[i] = new int[2];
+        }
+
+        for (int i = 0; i < posicionesPermitidas; i++)
+        {
             mapa.posiciones[i] = vector_A_Arreglo(posicionActual);
             posicionActual = sumarVectores(posicionActual, velocidad);
             trasladarPunto(mapa.ancho, mapa.largo, posicionActual);
@@ -133,50 +182,6 @@ private:
     Mapa mapa;
     Vector posicion;
     Vector velocidad;
-
-    // Función que recibe como parámetros el ancho y largo de un mapa, así como dos vectores: uno que representa la
-    // posición inicial de un vehículo y otro que representa su velocidad.
-    // La función determina la cantidad de posibles coordenadas hacia las cuales podría viajar el vehículo si se
-    // mantiene con la velocidad constante, hasta retornar al punto inicial.
-    int determinarPosiblesPosiciones(const int anchoDelMapa, const int largoDelMapa, const Vector puntoInicial, const Vector velocidad)
-    {
-        int contador = 1;
-        Vector posiblePosicion = sumarVectores(puntoInicial, velocidad);
-
-        while (!igualdadEntreVectores(posiblePosicion, puntoInicial))
-        {
-            posiblePosicion = sumarVectores(posiblePosicion, velocidad);
-            trasladarPunto(anchoDelMapa, largoDelMapa, posiblePosicion);
-            contador++;
-        }
-
-        return contador;
-    }
-
-    // Función que recibe como parámetros el ancho y largo de un mapa, así como la referencia a un vector.
-    // Si las componentes del vector están fuera del mapa, la función las reduce hasta que estén dentro del
-    // mismo y retorna un vector con la nueva posición válida.
-    void trasladarPunto(const int anchoDelMapa, const int largoDelMapa, Vector &posicion)
-    {
-        while (posicion.x >= anchoDelMapa || posicion.y >= largoDelMapa)
-        {
-            if (posicion.x >= anchoDelMapa)
-            {
-                while (posicion.x >= anchoDelMapa)
-                {
-                    posicion.x -= anchoDelMapa;
-                }
-            }
-
-            else
-            {
-                while (posicion.y >= largoDelMapa)
-                {
-                    posicion.y -= largoDelMapa;
-                }
-            }
-        }
-    }
 };
 
 int main()
@@ -194,6 +199,15 @@ int main()
     // Velocidad: <1, 3>
     carro.avanzar(15);
     carro.imprimirEstadoActual();
+
+    int posiblesPosiciones = determinarPosiblesPosiciones(mapa.ancho, mapa.largo, inicio, velocidad);
+
+    for (size_t i = 0; i < posiblesPosiciones; ++i)
+    {
+        delete[] carro.getMapa().posiciones[i];
+    }
+
+    delete[] carro.getMapa().posiciones;
 
     return 0;
 }
