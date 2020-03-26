@@ -16,13 +16,6 @@ struct Vector
     int y;
 };
 
-// Función con propósitos de prueba.
-// Función que imprime en la consola los componentes <x, y> de un vector.
-void imprimirVector(const Vector vector)
-{
-    printf("<%i, %i>", vector.x, vector.y);
-}
-
 // Función que suma dos vectores y retorna el resultado.
 Vector sumarVectores(const Vector vector1, const Vector vector2)
 {
