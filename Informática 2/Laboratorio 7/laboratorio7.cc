@@ -5,7 +5,7 @@
 
 struct Mapa
 {
-    int **posiciones;
+    bool **posiciones;
     int ancho;
     int largo;
 };
@@ -49,50 +49,6 @@ int *vector_A_Arreglo(Vector vector)
     posicion[1] = vector.y;
 
     return posicion;
-}
-
-// Función que recibe como parámetros el ancho y largo de un mapa, así como la referencia a un vector.
-// Si las componentes del vector están fuera del mapa, la función las reduce hasta que estén dentro del
-// mismo y retorna un vector con la nueva posición válida.
-void trasladarPunto(const int anchoDelMapa, const int largoDelMapa, Vector &posicion)
-{
-    while (posicion.x >= anchoDelMapa || posicion.y >= largoDelMapa)
-    {
-        if (posicion.x >= anchoDelMapa)
-        {
-            while (posicion.x >= anchoDelMapa)
-            {
-                posicion.x -= anchoDelMapa;
-            }
-        }
-
-        else
-        {
-            while (posicion.y >= largoDelMapa)
-            {
-                posicion.y -= largoDelMapa;
-            }
-        }
-    }
-}
-
-// Función que recibe como parámetros el ancho y largo de un mapa, así como dos vectores: uno que representa la
-// posición inicial de un vehículo y otro que representa su velocidad.
-// La función determina la cantidad de posibles coordenadas hacia las cuales podría viajar el vehículo si se
-// mantiene con la velocidad constante, hasta retornar al punto inicial.
-int determinarPosiblesPosiciones(const int anchoDelMapa, const int largoDelMapa, const Vector puntoInicial, const Vector velocidad)
-{
-    int contador = 1;
-    Vector posiblePosicion = sumarVectores(puntoInicial, velocidad);
-
-    while (!igualdadEntreVectores(posiblePosicion, puntoInicial))
-    {
-        posiblePosicion = sumarVectores(posiblePosicion, velocidad);
-        trasladarPunto(anchoDelMapa, largoDelMapa, posiblePosicion);
-        contador++;
-    }
-
-    return contador;
 }
 
 // Ejercicio #1 ====================================================================================================
@@ -140,34 +96,32 @@ public:
         velocidad.y += nuevaVelocidad.y;
     }
 
-    // Ejercicio #4 ====================================================================================================
-    void validarAvance()
-    {
-        Vector posicionActual = posicion;
-        const int posicionesPermitidas = determinarPosiblesPosiciones(mapa.ancho, mapa.largo, posicion, velocidad);
-
-        mapa.posiciones = new int *[posicionesPermitidas];
-
-        for (int i = 0; i < posicionesPermitidas; i++)
-        {
-            mapa.posiciones[i] = new int[2];
-        }
-
-        for (int i = 0; i < posicionesPermitidas; i++)
-        {
-            mapa.posiciones[i] = vector_A_Arreglo(posicionActual);
-            posicionActual = sumarVectores(posicionActual, velocidad);
-            trasladarPunto(mapa.ancho, mapa.largo, posicionActual);
-        }
-    }
-
     // Ejercicio #5 ====================================================================================================
     void avanzar(const int tiempo)
     {
         for (int i = 0; i < tiempo; i++)
         {
-            posicion = sumarVectores(posicion, velocidad);
-            trasladarPunto(mapa.ancho, mapa.largo, posicion);
+            Vector posicionActual = posicion;
+            Vector posiblePosicion = sumarVectores(posiblePosicion, velocidad);
+
+            if (mapa.posiciones[posiblePosicion.x][posiblePosicion.y])
+            {
+                posicion = posiblePosicion;
+            }
+
+            else
+            {
+                for (int i = 0; i < mapa.ancho; i++)
+                {
+                    for (int j = 0; j < mapa.largo; j++)
+                    {
+                        if (mapa.posiciones[i][j])
+                        {
+                            posicion = Vector{i, j};
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -177,30 +131,26 @@ private:
     Vector velocidad;
 };
 
-int main()
+// Ejercicio #4 ====================================================================================================
+bool validarAvance(Vehiculo vehiculo, Mapa mapa)
 {
-    // Condiciones de prueba.
-    Mapa mapa{{}, 10, 10};
-    Vector inicio{2, 2};
-    Vector velocidad = {1, 3};
+    Vector posiblePosicion = sumarVectores(posiblePosicion, vehiculo.getVelocidad());
 
-    Vehiculo carro(mapa, inicio);
-    carro.setVelocidad(velocidad);
-    carro.validarAvance();
-
-    // Posición: <7, 7>
-    // Velocidad: <1, 3>
-    carro.avanzar(15);
-    carro.imprimirEstadoActual();
-
-    int posiblesPosiciones = determinarPosiblesPosiciones(mapa.ancho, mapa.largo, inicio, velocidad);
-
-    for (size_t i = 0; i < posiblesPosiciones; ++i)
+    for (int i = 0; i < mapa.ancho; i++)
     {
-        delete[] carro.getMapa().posiciones[i];
+        for (int j = 0; j < mapa.largo; j++)
+        {
+            if (mapa.posiciones[posiblePosicion.x][posiblePosicion.y])
+            {
+                return true;
+            }
+        }
     }
 
-    delete[] carro.getMapa().posiciones;
+    return false;
+}
 
+int main()
+{
     return 0;
 }
