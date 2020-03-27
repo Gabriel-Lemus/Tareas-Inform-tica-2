@@ -27,30 +27,6 @@ Vector sumarVectores(const Vector vector1, const Vector vector2)
     return suma;
 }
 
-// Función que determina si los componentes entre dos vectores son iguales.
-bool igualdadEntreVectores(const Vector vector1, const Vector vector2)
-{
-    if (vector1.x == vector2.x && vector1.y == vector2.y)
-    {
-        return true;
-    }
-
-    else
-    {
-        return false;
-    }
-}
-
-// Función que convierte la instancia de vector pasada como parámetro a un arreglo bidimensional.
-int *vector_A_Arreglo(Vector vector)
-{
-    int *posicion = (int *)malloc(sizeof(int) * 2);
-    posicion[0] = vector.x;
-    posicion[1] = vector.y;
-
-    return posicion;
-}
-
 // Ejercicio #1 ====================================================================================================
 class Vehiculo
 {
