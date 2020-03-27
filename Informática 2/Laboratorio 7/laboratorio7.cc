@@ -80,7 +80,7 @@ public:
             Vector posicionActual = posicion;
             Vector posiblePosicion = sumarVectores(posiblePosicion, velocidad);
 
-            if (mapa.posiciones[posiblePosicion.x][posiblePosicion.y])
+            if (validarAvance())
             {
                 posicion = posiblePosicion;
             }
@@ -105,26 +105,26 @@ private:
     Mapa mapa;
     Vector posicion;
     Vector velocidad;
-};
 
-// Ejercicio #4 ====================================================================================================
-bool validarAvance(Vehiculo vehiculo, Mapa mapa)
-{
-    Vector posiblePosicion = sumarVectores(posiblePosicion, vehiculo.getVelocidad());
-
-    for (int i = 0; i < mapa.ancho; i++)
+    // Ejercicio #4 ====================================================================================================
+    bool validarAvance()
     {
-        for (int j = 0; j < mapa.largo; j++)
+        Vector posiblePosicion = sumarVectores(posiblePosicion, velocidad);
+
+        for (int i = 0; i < mapa.ancho; i++)
         {
-            if (mapa.posiciones[posiblePosicion.x][posiblePosicion.y])
+            for (int j = 0; j < mapa.largo; j++)
             {
-                return true;
+                if (mapa.posiciones[posiblePosicion.x][posiblePosicion.y])
+                {
+                    return true;
+                }
             }
         }
-    }
 
-    return false;
-}
+        return false;
+    }
+};
 
 int main()
 {
