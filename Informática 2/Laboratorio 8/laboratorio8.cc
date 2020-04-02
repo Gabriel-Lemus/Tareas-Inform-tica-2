@@ -1,5 +1,5 @@
 // Autores: Jorge Guerrero y Gabriel Lemus.
-// Descripción: Programa que acepta una lista de vectores 3d y encuentra la distancia entre ellos.
+// Descripción: Programa que acepta una lista de vectores 3d y encuentra la suma de la distancia entre ellos.
 
 #include <iostream>
 #include <string>
