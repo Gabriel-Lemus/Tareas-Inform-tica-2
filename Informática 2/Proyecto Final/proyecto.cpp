@@ -215,9 +215,9 @@ void proyecto()
 
 int main()
 {
-    prueba();
+    // prueba();
 
-    // proyecto();
+    proyecto();
 
     return 0;
 }
